@@ -9,7 +9,8 @@ var urlRoot = "https://api.github.com";
 var userId = "slopiano";
 var config = {};
 // Retrieve our api token from the environment variables.
-config.token = process.env.GITHUBTOKEN;
+//config.token = process.env.GITHUBTOKEN;
+config.token = "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"
 
 if( !config.token )
 {
@@ -24,11 +25,11 @@ console.log(chalk.green(`Your token is: ${config.token.substring(0,4)}...`));
 if (process.env.NODE_ENV != 'test')
 {
 	(async () => {
-		await listAuthenicatedUserRepos();
-		await listBranches(userId, "your repo");
-		//await createRepo(userId,newrepo);
-		//await createIssue(userId, repo, issue);
-		//await enableWikiSupport(userId,repo);
+		// await listAuthenicatedUserRepos();
+		// await listBranches(userId, "your repo");
+		await createRepo(userId,"SSW-345-new");
+		// await createIssue(userId, repo, issue);
+		// await enableWikiSupport(userId,repo);
 
 	})()
 }
@@ -78,6 +79,7 @@ function listAuthenicatedUserRepos()
 			}
 
 			var obj = JSON.parse(body);
+			console.log(obj);
 			for( var i = 0; i < obj.length; i++ )
 			{
 				var name = obj[i].name;
@@ -94,7 +96,7 @@ function listAuthenicatedUserRepos()
 // 1. Write code for listBranches in a given repo under an owner. See list branches
 async function listBranches(owner,repo)
 {
-	let options = getDefaultOptions(`/repos/slopiano/SSW-345-HW/branches`, "GET");
+	let options = getDefaultOptions(`/repos/slopiano/SSW-345/branches`, "GET");
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
@@ -118,6 +120,11 @@ async function listBranches(owner,repo)
 async function createRepo(owner,repo)
 {
 	let options = getDefaultOptions("/user/repos", "POST");
+	options.body = JSON.stringify({ 
+		name: repo, 
+		has_wiki: true 
+	});
+
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
@@ -133,7 +140,11 @@ async function createRepo(owner,repo)
 // 3. Write code for creating an issue for an existing repo.
 async function createIssue(owner,repo, issueName, issueBody)
 {
-	let options = getDefaultOptions("/repos/slopiano/SSW-345-HW/issues", "POST");
+	let options = getDefaultOptions("/repos/slopiano/SSW-345/issues", "POST");
+	options.body = JSON.stringify({ 
+		title: issueName, 
+		body: issueBody
+	});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
@@ -149,7 +160,10 @@ async function createIssue(owner,repo, issueName, issueBody)
 // 4. Write code for editing a repo to enable wiki support.
 async function enableWikiSupport(owner,repo)
 {
-	let options = getDefaultOptions("/repos/slopiano/SSW-345-HW", "PATCH");
+	let options = getDefaultOptions("/repos/slopiano/SSW-345", "PATCH");
+	options.body = JSON.stringify({ 
+		has_wiki = true
+	});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
